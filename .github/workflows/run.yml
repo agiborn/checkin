@@ -18,7 +18,7 @@ jobs:
       - run: npm run main
         env:
           GLADOS: ${{ secrets.GLADOS }}
-          GLADOS_UA: ${{ secrets.GLADOS_UA }}
+          GLADOS_UA: ${{ secrets.GLADOS_UA || 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36' }}
           DOMAIN: ${{ secrets.DOMAIN }}
           NOTIFY: ${{ secrets.NOTIFY }}
           AUTO_EXCHANGE: 'false'
