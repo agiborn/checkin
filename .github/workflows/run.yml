@@ -2,13 +2,16 @@ name: run
 
 on:
   workflow_dispatch:
-  push:
   schedule:
     - cron: 10 16 * * *
+
+permissions:
+  contents: read
 
 jobs:
   run:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-node@v7
