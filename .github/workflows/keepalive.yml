@@ -1,20 +1,30 @@
-name: Keepalive Workflow
+name: Keep GitHub Actions Active
+
 on:
   schedule:
-    - cron: "0 0 * * 0" # 每周日午夜自动执行
-  workflow_dispatch:
+    - cron: "0 1 1 * *"   # 每月1号 UTC 01:00 自动执行
+  workflow_dispatch:      # 可以手动执行一次
+
+permissions:
+  contents: write
 
 jobs:
-  prevent-cron-suspension:
-    name: Prevent Cron Suspension
+  keepalive:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write # 显式声明容器级写入协议，覆盖平台默认路由权限
+
     steps:
-      - uses: actions/checkout@v4 # 升级为 v4 规避节点环境衰减失效
-      - name: Native Keepalive Commit
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Update keepalive timestamp
         run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git commit --allow-empty -m "chore: auto-keepalive via native git"
+          mkdir -p .github
+          echo "Last keepalive: $(date -u '+%Y-%m-%d %H:%M:%S UTC')" > .github/keepalive.txt
+
+      - name: Commit and push changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add .github/keepalive.txt
+          git commit -m "chore: keep actions active" || exit 0
           git push
