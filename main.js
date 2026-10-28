@@ -21,7 +21,6 @@ const glados = async () => {
   for (const [index, cookie] of cookies.entries()) {
     const accountNo = index + 1
     console.log(`\n[账号 ${accountNo}] ---------- 开始处理 ----------`)
-    console.log(`[账号 ${accountNo}] Cookie: ${mask(cookie)}`)
     try {
       const domain = process.env.DOMAIN || 'glados.cloud'
       const ua = agents[index] || agents[0] || 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36'
@@ -96,9 +95,9 @@ const glados = async () => {
       }
 
       // ========== 4. 积分自动兑换（满500积分自动消耗500积分兑换100天） ==========
-      // 开关：AUTO_EXCHANGE，默认开启；设为 false 可关闭
+      // 安全默认值：AUTO_EXCHANGE 未显式设为 true 时不自动兑换积分
       // 阈值：EXCHANGE_THRESHOLD，默认 500
-      const autoExchange = String(process.env.AUTO_EXCHANGE || 'true').toLowerCase() !== 'false'
+      const autoExchange = String(process.env.AUTO_EXCHANGE || 'false').toLowerCase() === 'true'
       const exchangeThreshold = Number(process.env.EXCHANGE_THRESHOLD || 500)
       if (autoExchange && currentPoints != null && currentPoints >= exchangeThreshold) {
         try {
